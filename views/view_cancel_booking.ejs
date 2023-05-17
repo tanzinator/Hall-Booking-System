@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<style></style>
+<html>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
+
+
+<%- include ('../views/template/stylesheetLinks') %>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+
+        <%- include ('../views/template/view_header') %>
+
+        <%- include ('../views/template/nav') %>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    Booking Details
+                    <!--<small>Update the inventory.</small>-->
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                    <li class="active">Booking Details</li>
+                </ol>
+            </section>
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="box box-primary">
+                    <div>
+                        <form method="POST" action="/admin/cancel_booking" class="" id="approvalform">
+
+                            <div class="box-body">
+                                <div class="form-group" style="width: 25%">
+                                    <label>Booking Id :</label>
+                                    <input type="text" class="form-control" id="booking_id" name="booking_id"
+                                        placeholder="" value="<%= bookingListById.booking_id%>" readonly="readonly">
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Hall Name :</label>
+                                    <input type="text" class="form-control" id="venue_name" name="venue_name"
+                                        placeholder="" value="<%= bookingListById.venue_name%>" readonly="readonly">
+                                </div>
+
+                                <div class="form-group" style="width: 25%">
+                                    <label>Customer Name :</label>
+                                    <input type="text" class="form-control" id="user_name" name="user_name"
+                                        placeholder=""
+                                        value="<%= bookingListById.first_name + bookingListById.last_name%> "
+                                        readonly="readonly">
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Occasion Type :</label>
+                                    <input type="text" class="form-control" id="occasion_type" name="occasion_type"
+                                        placeholder="" value="<%= bookingListById.occasion_type%>" readonly="readonly">
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Approval Status:</label>
+                                    <input type="text" class="form-control" id="approval_status" name="approval_status"
+                                        placeholder="" value="<%= bookingListById.booking_status%>" readonly="readonly">
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Original Amount :</label>
+                                    <input type="number" class="form-control" id="original_amount"
+                                        name="original_amount" placeholder=""
+                                        value="<%= bookingListById.original_amount%>" readonly="readonly">
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Discount Amount(if any):</label>
+                                    <input type="number" class="form-control" id="discount" name="discount"
+                                        placeholder="" value="<%=bookingListById.discount%>" readonly="readonly">
+
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Total Price After Adjustments and Tax:</label>
+
+                                    <input type="text" class="form-control" id="total_amount" name="total_amount"
+                                        placeholder="" value="<%=bookingListById.approved_amount%>" readonly="readonly">
+                                </div>
+
+                            </div>
+                            <div class="box-footer">
+                                <%if( role_name == 'admin' || bookingListById.booking_status == 'Cancelled' ){%>
+
+                                <input type="submit" name="cancel" id="cancel" value="Booking Cancelled"
+                                    class="btn btn-success" disabled>
+                                <%}else{%>
+
+                                <input type="submit" name="cancel" id="cancel" value="Cancel Booking"
+                                    class="btn btn-success">
+                                <%}%>
+                            </div>
+                        </form>
+
+
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+    required
+    <%- include ('../views/template/scripts') %>
+
+
+    <footer>
+            <div style="text-align: center;">
+                    <p>Developed by <a href="https://octointernet.com">Nishadh Amonkar</a> and Tanay Amonkar<br>
+                        <a href="mailto:marutimandirdavorlim@gmail.com">Email Us</a></p>
+            </div>
+           
+          </footer>
+</body>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.5.3/js/bootstrapValidator.js"></script>
+<script>
+    $(document).ready(function () {
+
+    })
+</script>
+
+</html>

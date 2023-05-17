@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+
+<html>
+
+
+<%- include ('../views/template/stylesheetLinks') %>
+<style>
+
+</style>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+        <%- include ('../views/template/view_header') %>
+
+        <%- include ('../views/template/nav') %>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    Adhoc Bookings
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> Adhoc Bookings</a></li>
+                </ol>
+            </section>
+
+
+            <p></p>
+            <p></p>
+            <p></p>
+
+
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="box box-primary">
+                    <div>
+                        <% if(typeof(adhoclist) != "undefined") {%>
+
+                        <table class="table table-bordered" id="request">
+                            <thead>
+                                <tr>
+                                    <th>SL</th>
+                                    <th>Customer Name</th>
+                                    <th>Mobile Number</th>
+                                    <th>Email</th>
+                                    <th>Billing Address</th>
+                                    <th>Hall Name</th>
+                                    <th>Occasion Type</th>
+                                    <th>Date of Booking</th>
+                                    <th>Request Submitted on</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% 
+                                var sl=1;
+                                adhoclist.forEach(function(element) {%>
+                                <tr>
+                                    <td><%=sl++%></td>
+                                    <td><%=element.first_name + " " + element.last_name%></td>
+                                    <td><%= element.mobile_number%></td>
+                                    <td><%=element.email%></td>
+                                    <td><%= element.billing_address%></td>
+                                    <td><%= element.venue_name%></td>
+                                    <td><%= element.occasion_type%></td>
+                                    <td><%= element.booking_date%></td>
+                                    <td><%= element.request_submitted_on%></td>
+
+                                </tr>
+                                <%})%>
+                            </tbody>
+                        </table>
+                        <%}%>
+                    </div>
+                </div>
+            </section>
+            <!-- /.content -->
+        </div>
+
+    </div>
+    <!-- ./wrapper -->
+    <%- include ('../views/template/scripts') %>
+                        <script type="text/javascript" src="/public/js-xlsx/xlsx.core.min.js"></script>
+                        <script type="text/javascript" src="/public/tableExport.min.js"></script>
+                        <script src="/public/tableExport.js"></script>
+
+
+                        <footer>
+                            <div style="text-align: center;">
+                                <p>Developed by <a href="https://octointernet.com">Nishadh Amonkar</a> and Tanay
+                                    Amonkar<br>
+                                    <a href="mailto:marutimandirdavorlim@gmail.com">Email Us</a></p>
+                            </div>
+
+                        </footer>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#request').DataTable()
+        $(".dataExport").click(function () {
+            var exportType = $(this).data('type');
+            $('#request').tableExport({
+                type: exportType,
+                escape: 'false',
+                ignoreColumn: [],
+                jspdf: {
+                    orientation: 'l',
+                    format: 'a3',
+                    margins: {
+                        left: 10,
+                        right: 10,
+                        top: 20,
+                        bottom: 20
+                    },
+                    autotable: {
+                        styles: {
+                            fillColor: 'inherit',
+                            textColor: 'inherit'
+                        },
+                        tableWidth: 'auto'
+                    }
+                }
+            });
+        });
+    })
+
+    function myFunction1() {
+        // Declare variables
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("request");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[3];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+
+
+</html>

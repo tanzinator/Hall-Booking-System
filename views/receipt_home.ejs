@@ -1,0 +1,915 @@
+<html>
+
+<head>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <link href="/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet"
+    type="text/css" />
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" type="text/javascript"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+
+
+
+  <style>
+    *,
+    :before,
+    :after {
+      box-sizing: border-box;
+    }
+
+    .signature-component {
+      text-align: left;
+      display: inline-block;
+      max-width: 100%;
+      margin-left: 600px;
+
+      h1 {
+        margin-bottom: 0;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 100%;
+      }
+
+      button {
+        padding: 1em;
+        background: transparent;
+        box-shadow: 2px 2px 4px #777;
+        margin-top: .5em;
+        border: 1px solid #777;
+        font-size: 1rem;
+
+        &.toggle {
+          background: rgba(red, .2);
+        }
+      }
+
+      canvas {
+        display: block;
+        position: relative;
+        border: 1px solid;
+      }
+
+      img {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+    }
+
+    #success_message {
+      display: none;
+    }
+
+    .searchable-container {
+      margin: 20px 0 0 0
+    }
+
+    .searchable-container label.btn-default.active {
+      background-color: #007ba7;
+      color: #FFF
+    }
+
+    .searchable-container label.btn-default {
+      width: 90%;
+      border: 1px solid #efefef;
+      margin: 5px;
+      box-shadow: 5px 8px 8px 0 #ccc;
+    }
+
+    .searchable-container label .bizcontent {
+      width: 100%;
+    }
+
+    .searchable-container .btn-group {
+      width: 90%
+    }
+
+    .searchable-container .btn span.glyphicon {
+      opacity: 0;
+    }
+
+    .searchable-container .btn.active span.glyphicon {
+      opacity: 1;
+    }
+
+    .btn {
+      white-space: normal;
+    }
+  </style>
+
+</head>
+
+<body>
+  
+  <div class="container">
+
+    <form class="well form-horizontal" id="feedbackform">
+
+      <fieldset>
+
+        <!-- Form Name -->
+        <legend>Maruti Mandir</legend>
+        
+       
+        <div class="form-group">
+          <h1><a href="/receipt/create_receipt">New Receipt</a></h1> <label class="col-md-4 control-label">Receipt
+            No</label>
+          <div class="col-md-4 inputGroupContainer">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-file"></i></span>
+              <input name="receiptId" id="receiptId" placeholder="Receipt No." class="form-control" type="text"
+                value="<%=receiptId%>" readonly="readonly">
+            </div>
+          </div>
+        </div>
+
+        <div class=" form-group">
+          <!-- <label class="col-md-4 control-label">First Name</label> -->
+          <div class="col-md-4 inputGroupContainer">
+            <div class="input-group">
+              <!-- <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span> -->
+              <input name="firstName" id="firstName" type="hidden" value="temp" class="form-control" type="text">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <!-- <label class="col-md-4 control-label">Last Name</label> -->
+          <div class="col-md-4 inputGroupContainer">
+            <div class="input-group">
+              <!-- <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span> -->
+              <input name="lastName" id="lastName" type="hidden" value="temp" class="form-control" type="text">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="receipt_date">Receipt Date</label>
+          <div class=" col-md-4 input-group date form_datetime" data-date="2020-04-01T05:25:07Z"
+            data-date-format="yyyy-mm-ddThh:ii:ss" data-link-field="dtp_input1">
+            <input name="app_date" class="form-control" size="26" type="text" value="" readonly>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+          </div>
+          <input type="hidden" id="dtp_input1" value="" /><br />
+        </div>
+
+        <!--Services-->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="services">Services</label>
+        </div>
+
+
+        <div class="container">
+          <div class="row">
+            <div class="form-group">
+
+              <div class="searchable-container">
+                <%if(servicesList){%>
+                <% servicesList.forEach(function(row) { %>
+                <div class="items col-xs-5 col-sm-5 col-md-3 col-lg-3">
+                  <div class="info-block block-info clearfix">
+                    <div data-toggle="buttons" class="btn-group bizmoduleselect">
+                      <label class="btn btn-default">
+                        <div class="bizcontent">
+                          <label class="control checkbox">
+                            <label for="<%=row.service_deva%>"><%=row.service_deva%></label>
+                            <input type="checkbox" name="<%=row.service_deva%>" id="var_id" class="var_id"
+                              autocomplete="off" value="<%=row.service_amount%>" style="opacity:0; position:absolute;">
+                            <span class="glyphicon glyphicon-ok glyphicon-lg"></span>
+                          </label>
+                          <h5><%=row.service_name%>
+                            <hr><%='Rs. '+row.service_amount%></h5>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <%})%>
+                <%}%>
+              </div>        
+  </div>
+  </div>
+  </div>
+  
+
+  <!-- Amount-->
+  <div class="form-group col-md-6" style="width: 25%">
+<div class="checkbox">
+  <label><input type="checkbox" id="any_check" value="">Enable Any</label>
+</div>
+    <br><br>
+    <label> ANY :</label>
+    <input type="number" step="any" class="form-control" id="any_amount" name="any_amount" placeholder="" value="0" readonly="readonly">
+    <br><br>
+    <label> Total Amount :</label>
+    <input type="text" step="any" class="form-control" id="total" name="total" placeholder="" value="0" readonly>
+
+  </div>
+
+  <!-- Signature-->
+  <div class="signature-component">
+    <h3>Initials OR Full Name</h3>
+    <h4>with mouse or touch</h4>
+
+    <canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;">
+      Your browser does not support the HTML canvas tag.
+    </canvas>
+
+    <div>
+      <button id="clear">Clear</button>
+    </div>
+
+  </div>
+
+
+
+
+  <!-- Success message -->
+  <div class="alert alert-success" role="alert" id="success_message">Success <i
+      class="glyphicon glyphicon-thumbs-up"></i> Thanks for submitting.</div>
+
+
+  <div class="form-group ">
+    <label class="col-md-4 control-label"></label>
+    <div class="col-md-4" style="margin-top: 60px;">
+      <button type="submit" class="btn btn-warning" name="receiptSubmit" id="receiptSubmit">Generate Receipt <span
+          class="glyphicon glyphicon-send"></span></button>
+      <button type="button" class="btn btn-primary" name="newReceipt" id="newReceipt">New Receipt <span
+          class="glyphicon glyphicon-send"></span></button>
+
+    </div>
+  </div>
+
+  </fieldset>
+
+
+  </form>
+  </div>
+  <footer>
+    <div style="text-align: center;">
+      <p>Developed by <a href="https://octointernet.com">Nishadh Amonkar</a> and Tanay Amonkar<br>
+        <a href="mailto:marutimandirdavorlim@gmail.com">Email Us</a></p>
+    </div>
+
+  </footer>
+</body>
+
+</html>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+<script type="text/javascript">
+
+  var activityNames = []
+  var totalAmount = 0;
+
+
+  $('input[type="checkbox"]').click(function () {
+    totalAmount = 0
+    $('#total').val(totalAmount)
+
+    //if any checkbox is checked
+    if ($(this).prop("checked") == true) {
+      activityNames = []
+      $('#any_amount').attr("readonly", false)
+      $('#total').val(0)
+      $(".searchable-container label.btn-default.active").removeClass("active");
+      $(".btn-group").find(':checkbox').prop('checked', false)
+      $(".searchable-container *").attr("disabled", "disabled").off('click')
+    }
+
+    //if any checkbox unchecked
+    if ($(this).prop("checked") == false) {
+
+      $('#any_amount').attr("readonly", true)
+      $(".searchable-container *").removeAttr("disabled");
+      $('#any_amount').val(0)
+
+      $('.searchable-container div.btn-group').on("click", function () {
+        var checkbox = $(this).find("input[type='checkbox']");
+        if (!checkbox.prop("checked")) {
+          activityNames.push($(this).find('#var_id').attr("name"))
+          totalAmount = totalAmount + parseInt($(this).find('.var_id').val())
+
+        }
+        else if (checkbox.prop("checked")) {
+          var index = activityNames.indexOf($(this).find('#var_id').attr("name"))
+          if (index > -1) {
+            activityNames.splice(index, 1)
+          }
+          totalAmount = totalAmount - parseInt($(this).find('.var_id').val())
+        }
+        $('#total').val(totalAmount)
+      })
+
+    }
+
+
+
+  })
+
+  $(document).on('change', "#any_amount", function () {
+    var anyAmount = $(this).val()
+    $('#total').val(anyAmount)
+  })
+
+
+
+
+  var imageData;
+  $('.form_datetime').datetimepicker({
+    //language:  'fr',
+    weekStart: 1,
+    todayBtn: 1,
+    autoclose: 1,
+    todayHighlight: 1,
+    startView: 2,
+    forceParse: 0,
+    showMeridian: 1
+  });
+
+  $('.bb').select2({
+    placeholder: 'Select an option',
+    allowClear: true
+  });
+
+
+
+  //checkbox values code
+  $('.searchable-container div.btn-group').on("click", function () {
+    var checkbox = $(this).find("input[type='checkbox']");
+    if (!checkbox.prop("checked")) {
+      activityNames.push($(this).find('#var_id').attr("name"))
+      totalAmount = totalAmount + parseInt($(this).find('.var_id').val())
+
+    }
+    else if (checkbox.prop("checked")) {
+      var index = activityNames.indexOf($(this).find('#var_id').attr("name"))
+      if (index > -1) {
+        activityNames.splice(index, 1)
+      }
+      totalAmount = totalAmount - parseInt($(this).find('.var_id').val())
+    }
+    $('#total').val(totalAmount)
+  })
+
+
+  /*!
+ * Modified
+ * Signature Pad v1.5.3
+ * https://github.com/szimek/signature_pad
+ *
+ * Copyright 2016 Szymon Nowak
+ * Released under the MIT license
+ */
+
+  var SignaturePad = (function (document) {
+    "use strict";
+
+    var log = console.log.bind(console);
+
+    var SignaturePad = function (canvas, options) {
+      var self = this,
+        opts = options || {};
+
+      this.velocityFilterWeight = opts.velocityFilterWeight || 0.7;
+      this.minWidth = opts.minWidth || 0.5;
+      this.maxWidth = opts.maxWidth || 2.5;
+      this.dotSize = opts.dotSize || function () {
+        return (self.minWidth + self.maxWidth) / 2;
+      };
+      this.penColor = opts.penColor || "black";
+      this.backgroundColor = opts.backgroundColor || "rgba(0,0,0,0)";
+      this.throttle = opts.throttle || 0;
+      this.throttleOptions = {
+        leading: true,
+        trailing: true
+      };
+      this.minPointDistance = opts.minPointDistance || 0;
+      this.onEnd = opts.onEnd;
+      this.onBegin = opts.onBegin;
+
+      this._canvas = canvas;
+      this._ctx = canvas.getContext("2d");
+      this._ctx.lineCap = 'round';
+      this.clear();
+
+      // we need add these inline so they are available to unbind while still having
+      //  access to 'self' we could use _.bind but it's not worth adding a dependency
+      this._handleMouseDown = function (event) {
+        if (event.which === 1) {
+          self._mouseButtonDown = true;
+          self._strokeBegin(event);
+        }
+      };
+
+      var _handleMouseMove = function (event) {
+        event.preventDefault();
+        if (self._mouseButtonDown) {
+          self._strokeUpdate(event);
+          if (self.arePointsDisplayed) {
+            var point = self._createPoint(event);
+            self._drawMark(point.x, point.y, 5);
+          }
+        }
+      };
+
+      this._handleMouseMove = _.throttle(_handleMouseMove, self.throttle, self.throttleOptions);
+      //this._handleMouseMove = _handleMouseMove;
+
+      this._handleMouseUp = function (event) {
+        if (event.which === 1 && self._mouseButtonDown) {
+          self._mouseButtonDown = false;
+          self._strokeEnd(event);
+        }
+      };
+
+      this._handleTouchStart = function (event) {
+        if (event.targetTouches.length == 1) {
+          var touch = event.changedTouches[0];
+          self._strokeBegin(touch);
+        }
+      };
+
+      var _handleTouchMove = function (event) {
+        // Prevent scrolling.
+        event.preventDefault();
+
+        var touch = event.targetTouches[0];
+        self._strokeUpdate(touch);
+        if (self.arePointsDisplayed) {
+          var point = self._createPoint(touch);
+          self._drawMark(point.x, point.y, 5);
+        }
+      };
+      this._handleTouchMove = _.throttle(_handleTouchMove, self.throttle, self.throttleOptions);
+      //this._handleTouchMove = _handleTouchMove;
+
+      this._handleTouchEnd = function (event) {
+        var wasCanvasTouched = event.target === self._canvas;
+        if (wasCanvasTouched) {
+          event.preventDefault();
+          self._strokeEnd(event);
+        }
+      };
+
+      this._handleMouseEvents();
+      this._handleTouchEvents();
+    };
+
+    SignaturePad.prototype.clear = function () {
+      var ctx = this._ctx,
+        canvas = this._canvas;
+
+      ctx.fillStyle = this.backgroundColor;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      this._reset();
+    };
+
+    SignaturePad.prototype.showPointsToggle = function () {
+      this.arePointsDisplayed = !this.arePointsDisplayed;
+    };
+
+    SignaturePad.prototype.toDataURL = function (imageType, quality) {
+      var canvas = this._canvas;
+      return canvas.toDataURL.apply(canvas, arguments);
+    };
+
+    SignaturePad.prototype.fromDataURL = function (dataUrl) {
+      var self = this,
+        image = new Image(),
+        ratio = window.devicePixelRatio || 1,
+        width = this._canvas.width / ratio,
+        height = this._canvas.height / ratio;
+
+      this._reset();
+      image.src = dataUrl;
+      image.onload = function () {
+        self._ctx.drawImage(image, 0, 0, width, height);
+      };
+      this._isEmpty = false;
+    };
+
+    SignaturePad.prototype._strokeUpdate = function (event) {
+      var point = this._createPoint(event);
+      if (this._isPointToBeUsed(point)) {
+        this._addPoint(point);
+      }
+    };
+
+    var pointsSkippedFromBeingAdded = 0;
+    SignaturePad.prototype._isPointToBeUsed = function (point) {
+      // Simplifying, De-noise
+      if (!this.minPointDistance)
+        return true;
+
+      var points = this.points;
+      if (points && points.length) {
+        var lastPoint = points[points.length - 1];
+        if (point.distanceTo(lastPoint) < this.minPointDistance) {
+          // log(++pointsSkippedFromBeingAdded);
+          return false;
+        }
+      }
+      return true;
+    };
+
+    SignaturePad.prototype._strokeBegin = function (event) {
+      this._reset();
+      this._strokeUpdate(event);
+      if (typeof this.onBegin === 'function') {
+        this.onBegin(event);
+      }
+    };
+
+    SignaturePad.prototype._strokeDraw = function (point) {
+      var ctx = this._ctx,
+        dotSize = typeof (this.dotSize) === 'function' ? this.dotSize() : this.dotSize;
+
+      ctx.beginPath();
+      this._drawPoint(point.x, point.y, dotSize);
+      ctx.closePath();
+      ctx.fill();
+    };
+
+    SignaturePad.prototype._strokeEnd = function (event) {
+      var canDrawCurve = this.points.length > 2,
+        point = this.points[0];
+
+      if (!canDrawCurve && point) {
+        this._strokeDraw(point);
+      }
+      if (typeof this.onEnd === 'function') {
+        this.onEnd(event);
+      }
+    };
+
+    SignaturePad.prototype._handleMouseEvents = function () {
+      this._mouseButtonDown = false;
+
+      this._canvas.addEventListener("mousedown", this._handleMouseDown);
+      this._canvas.addEventListener("mousemove", this._handleMouseMove);
+      document.addEventListener("mouseup", this._handleMouseUp);
+    };
+
+    SignaturePad.prototype._handleTouchEvents = function () {
+      // Pass touch events to canvas element on mobile IE11 and Edge.
+      this._canvas.style.msTouchAction = 'none';
+      this._canvas.style.touchAction = 'none';
+
+      this._canvas.addEventListener("touchstart", this._handleTouchStart);
+      this._canvas.addEventListener("touchmove", this._handleTouchMove);
+      this._canvas.addEventListener("touchend", this._handleTouchEnd);
+    };
+
+    SignaturePad.prototype.on = function () {
+      this._handleMouseEvents();
+      this._handleTouchEvents();
+    };
+
+    SignaturePad.prototype.off = function () {
+      this._canvas.removeEventListener("mousedown", this._handleMouseDown);
+      this._canvas.removeEventListener("mousemove", this._handleMouseMove);
+      document.removeEventListener("mouseup", this._handleMouseUp);
+
+      this._canvas.removeEventListener("touchstart", this._handleTouchStart);
+      this._canvas.removeEventListener("touchmove", this._handleTouchMove);
+      this._canvas.removeEventListener("touchend", this._handleTouchEnd);
+    };
+
+    SignaturePad.prototype.isEmpty = function () {
+      return this._isEmpty;
+    };
+
+    SignaturePad.prototype._reset = function () {
+      this.points = [];
+      this._lastVelocity = 0;
+      this._lastWidth = (this.minWidth + this.maxWidth) / 2;
+      this._isEmpty = true;
+      this._ctx.fillStyle = this.penColor;
+    };
+
+    SignaturePad.prototype._createPoint = function (event) {
+      var rect = this._canvas.getBoundingClientRect();
+      return new Point(
+        event.clientX - rect.left,
+        event.clientY - rect.top
+      );
+    };
+
+    SignaturePad.prototype._addPoint = function (point) {
+      var points = this.points,
+        c2, c3,
+        curve, tmp;
+
+      points.push(point);
+
+      if (points.length > 2) {
+        // To reduce the initial lag make it work with 3 points
+        // by copying the first point to the beginning.
+        if (points.length === 3) points.unshift(points[0]);
+
+        tmp = this._calculateCurveControlPoints(points[0], points[1], points[2]);
+        c2 = tmp.c2;
+        tmp = this._calculateCurveControlPoints(points[1], points[2], points[3]);
+        c3 = tmp.c1;
+        curve = new Bezier(points[1], c2, c3, points[2]);
+        this._addCurve(curve);
+
+        // Remove the first element from the list,
+        // so that we always have no more than 4 points in points array.
+        points.shift();
+      }
+    };
+
+    SignaturePad.prototype._calculateCurveControlPoints = function (s1, s2, s3) {
+      var dx1 = s1.x - s2.x,
+        dy1 = s1.y - s2.y,
+        dx2 = s2.x - s3.x,
+        dy2 = s2.y - s3.y,
+
+        m1 = {
+          x: (s1.x + s2.x) / 2.0,
+          y: (s1.y + s2.y) / 2.0
+        },
+        m2 = {
+          x: (s2.x + s3.x) / 2.0,
+          y: (s2.y + s3.y) / 2.0
+        },
+
+        l1 = Math.sqrt(1.0 * dx1 * dx1 + dy1 * dy1),
+        l2 = Math.sqrt(1.0 * dx2 * dx2 + dy2 * dy2),
+
+        dxm = (m1.x - m2.x),
+        dym = (m1.y - m2.y),
+
+        k = l2 / (l1 + l2),
+        cm = {
+          x: m2.x + dxm * k,
+          y: m2.y + dym * k
+        },
+
+        tx = s2.x - cm.x,
+        ty = s2.y - cm.y;
+
+      return {
+        c1: new Point(m1.x + tx, m1.y + ty),
+        c2: new Point(m2.x + tx, m2.y + ty)
+      };
+    };
+
+    SignaturePad.prototype._addCurve = function (curve) {
+      var startPoint = curve.startPoint,
+        endPoint = curve.endPoint,
+        velocity, newWidth;
+
+      velocity = endPoint.velocityFrom(startPoint);
+      velocity = this.velocityFilterWeight * velocity +
+        (1 - this.velocityFilterWeight) * this._lastVelocity;
+
+      newWidth = this._strokeWidth(velocity);
+      this._drawCurve(curve, this._lastWidth, newWidth);
+
+      this._lastVelocity = velocity;
+      this._lastWidth = newWidth;
+    };
+
+    SignaturePad.prototype._drawPoint = function (x, y, size) {
+      var ctx = this._ctx;
+
+      ctx.moveTo(x, y);
+      ctx.arc(x, y, size, 0, 2 * Math.PI, false);
+      this._isEmpty = false;
+    };
+
+    SignaturePad.prototype._drawMark = function (x, y, size) {
+      var ctx = this._ctx;
+
+      ctx.save();
+      ctx.moveTo(x, y);
+      ctx.arc(x, y, size, 0, 2 * Math.PI, false);
+      ctx.fillStyle = 'rgba(255, 0, 0, 0.2)';
+      ctx.fill();
+      ctx.restore();
+    };
+
+    SignaturePad.prototype._drawCurve = function (curve, startWidth, endWidth) {
+      var ctx = this._ctx,
+        widthDelta = endWidth - startWidth,
+        drawSteps, width, i, t, tt, ttt, u, uu, uuu, x, y;
+
+      drawSteps = Math.floor(curve.length());
+      ctx.beginPath();
+      for (i = 0; i < drawSteps; i++) {
+        // Calculate the Bezier (x, y) coordinate for this step.
+        t = i / drawSteps;
+        tt = t * t;
+        ttt = tt * t;
+        u = 1 - t;
+        uu = u * u;
+        uuu = uu * u;
+
+        x = uuu * curve.startPoint.x;
+        x += 3 * uu * t * curve.control1.x;
+        x += 3 * u * tt * curve.control2.x;
+        x += ttt * curve.endPoint.x;
+
+        y = uuu * curve.startPoint.y;
+        y += 3 * uu * t * curve.control1.y;
+        y += 3 * u * tt * curve.control2.y;
+        y += ttt * curve.endPoint.y;
+
+        width = startWidth + ttt * widthDelta;
+        this._drawPoint(x, y, width);
+      }
+      ctx.closePath();
+      ctx.fill();
+    };
+
+    SignaturePad.prototype._strokeWidth = function (velocity) {
+      return Math.max(this.maxWidth / (velocity + 1), this.minWidth);
+    };
+
+    var Point = function (x, y, time) {
+      this.x = x;
+      this.y = y;
+      this.time = time || new Date().getTime();
+    };
+
+    Point.prototype.velocityFrom = function (start) {
+      return (this.time !== start.time) ? this.distanceTo(start) / (this.time - start.time) : 1;
+    };
+
+    Point.prototype.distanceTo = function (start) {
+      return Math.sqrt(Math.pow(this.x - start.x, 2) + Math.pow(this.y - start.y, 2));
+    };
+
+    var Bezier = function (startPoint, control1, control2, endPoint) {
+      this.startPoint = startPoint;
+      this.control1 = control1;
+      this.control2 = control2;
+      this.endPoint = endPoint;
+    };
+
+    // Returns approximated length.
+    Bezier.prototype.length = function () {
+      var steps = 10,
+        length = 0,
+        i, t, cx, cy, px, py, xdiff, ydiff;
+
+      for (i = 0; i <= steps; i++) {
+        t = i / steps;
+        cx = this._point(t, this.startPoint.x, this.control1.x, this.control2.x, this.endPoint.x);
+        cy = this._point(t, this.startPoint.y, this.control1.y, this.control2.y, this.endPoint.y);
+        if (i > 0) {
+          xdiff = cx - px;
+          ydiff = cy - py;
+          length += Math.sqrt(xdiff * xdiff + ydiff * ydiff);
+        }
+        px = cx;
+        py = cy;
+      }
+      return length;
+    };
+
+    Bezier.prototype._point = function (t, start, c1, c2, end) {
+      return start * (1.0 - t) * (1.0 - t) * (1.0 - t) +
+        3.0 * c1 * (1.0 - t) * (1.0 - t) * t +
+        3.0 * c2 * (1.0 - t) * t * t +
+        end * t * t * t;
+    };
+
+    return SignaturePad;
+  })(document);
+
+  var signaturePad = new SignaturePad(document.getElementById('myCanvas'), {
+    backgroundColor: 'rgba(255, 255, 255, 0)',
+    penColor: 'rgb(0, 0, 0)',
+    velocityFilterWeight: .7,
+    minWidth: 0.5,
+    maxWidth: 2.5,
+    throttle: 16, // max x milli seconds on event update, OBS! this introduces lag for event update
+    minPointDistance: 3,
+  });
+  //var saveButton = document.getElementById('save'),
+  clearButton = document.getElementById('clear'),
+    showPointsToggle = document.getElementById('showPointsToggle');
+
+  /* saveButton.addEventListener('click', function (event) {
+     imageData = signaturePad.toDataURL('image/png');
+     //window.open(data);
+   });*/
+  clearButton.addEventListener('click', function (event) {
+    signaturePad.clear();
+  });
+
+
+
+  //ajax
+
+  //generate new receipt
+  newReceipt = document.getElementById('newReceipt')
+  newReceipt.addEventListener('click', function (event) {
+    location.reload();
+  })
+
+
+
+
+  //submit receipt
+  var receiptSubmit = document.getElementById('receiptSubmit');
+  receiptSubmit.addEventListener('click', function (event) {
+    var validation = true;
+    if ($('#any_check').is(':checked')) {
+      var anyvalue = $('#any_amount').val()
+      if (anyvalue <= 0) {
+        alert('ANY field should be greater than 0')
+        validation = false;
+        return false;
+      }
+    }
+    if(!$('#any_check').is(':checked')) {
+      if(activityNames == '') {
+        alert('Please select atleast one service or enable custom')
+        validation = false;
+        return false;
+      }
+    }
+    
+    imageData = signaturePad.toDataURL('image/png');
+   
+    if (validation) {
+      //window.open(data);
+      var params = {
+        receiptId: $('#receiptId').val(),
+        firstName: $('#firstName').val(),
+        lastName: $('#lastName').val(),
+        activities: activityNames.toString(),
+        amount: $('#total').val(),
+        imageData: imageData
+      }
+      $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: '/receipt/add-receipt',
+        contentType: 'application/json',
+        data: JSON.stringify(params),
+        success: function (response) {
+          $('#receiptSubmit').prop('disabled', true)
+          //createInvoice();
+          /*$.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: '/createinvoice',
+            contentType: 'application/json',
+            data: JSON.stringify(params),
+            success: function (response) {
+              alert(response + "tttt");
+              location.href = '/'
+            },
+            error: function () {
+              console.log('process error');
+              location.href = '/getsample'
+            }
+   
+          })*/
+          location.href = '/receipt/createinvoice'
+        },
+        error: function () {
+          console.log('process error');
+          location.href = '/receipt/createinvoice'
+        },
+      });
+
+      /*function createInvoice() {
+        $.ajax({
+          type: 'GET',
+          dataType: 'json',
+          url: '/receipt/createinvoice',
+          success: function (response) {
+            alert(response + "tttt");
+            location.href = '/receipt/createinvoice'
+          },
+          error: function () {
+            console.log('process error');
+            location.href = '/receipt/createinvoice'
+          }
+   
+        })
+      }*/
+    }
+  })
+
+</script>

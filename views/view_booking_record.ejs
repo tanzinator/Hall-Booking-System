@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<style></style>
+<html>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
+
+
+<%- include ('../views/template/stylesheetLinks') %>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+
+        <%- include ('../views/template/view_header') %>
+
+        <%- include ('../views/template/nav') %>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    Booking Details
+                    <!--<small>Update the inventory.</small>-->
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                    <li class="active">Booking Details</li>
+                </ol>
+            </section>
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="box box-primary">
+                    <div>
+                        <form method="POST" action="/admin/approve_booking" class="" id="approvalform">
+
+                            <div class="box-body">
+                                <div class="form-group" style="width: 25%">
+                                    <label>Booking Id :</label>
+                                    <input type="text" class="form-control" id="booking_id" name="booking_id"
+                                        placeholder="" value="<%= bookingListById.booking_id%>" readonly="readonly">
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Hall Name :</label>
+                                    <input type="text" class="form-control" id="venue_name" name="venue_name"
+                                        placeholder="" value="<%= bookingListById.venue_name%>" readonly="readonly">
+                                </div>
+
+                                <div class="form-group" style="width: 25%">
+                                    <label>Customer Name :</label>
+                                    <input type="text" class="form-control" id="user_name" name="user_name"
+                                        placeholder=""
+                                        value="<%= bookingListById.first_name + ' ' + bookingListById.last_name%> "
+                                        readonly="readonly">
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Customer Mobile Number :</label>
+                                    <input type="text" class="form-control" id="mobile_number" name="mobile_number"
+                                        placeholder="" value="<%= bookingListById.mobile_number%> " readonly="readonly">
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Customer Email :</label>
+                                    <input type="text" class="form-control" id="email" name="email" placeholder=""
+                                        value="<%=bookingListById.email%> " readonly="readonly">
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Occasion Type :</label>
+                                    <input type="text" class="form-control" id="occasion_type" name="occasion_type"
+                                        placeholder="" value="<%= bookingListById.occasion_type%>" readonly="readonly">
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Approval Status:</label>
+                                    <input type="text" class="form-control" id="approval_status" name="approval_status"
+                                        placeholder="" value="<%= bookingListById.booking_status%>" readonly="readonly">
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Original Amount :</label>
+                                    <input type="number" class="form-control" id="original_amount"
+                                        name="original_amount" placeholder=""
+                                        value="<%= bookingListById.original_amount%>" readonly="readonly">
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Discount Amount(if any):</label>
+                                    <%if(role_name == 'admin' || discountDisable){%>
+                                    <input type="number" class="form-control" id="discount" name="discount"
+                                        placeholder="" value="<%=bookingListById.discount%>" readonly="readonly">
+
+                                    <%}else{%>
+                                    <input type="number" class="form-control" id="discount" name="discount"
+                                        placeholder="">
+                                    <%}%>
+                                </div>
+                                <div class="form-group">
+                                    <label>Discount Recommended By:</label>
+                                    <%if(bookingListById.discount_recommended_by == null){%>
+                                    <select class="form-control select2 bb" name="discount_rec" id="discount_rec"
+                                        style="width: 25%" disabled="disabled">
+                                        <option>--Please Select--</option>
+                                        <option value="Pandurang A Naik">Pandurang A Naik</option>
+                                        <option value="R.S. Kamat">R.S. Kamat</option>
+                                        <option value="Pandurang Shirwaikar">Pandurang Shirwaikar</option>
+                                    </select>
+                                    <%}%>
+                                    <% if(bookingListById.discount_recommended_by != null){%>
+                                    <select class="form-control select2 bb" name="discount_rec" id="discount_rec"
+                                        style="width: 25%" disabled="disabled">
+                                        <option value="<%=bookingListById.discount_recommended_by%>">
+                                            <%=bookingListById.discount_recommended_by%></option>
+                                    </select>
+                                    <%}%>
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Total Price After Adjustments and Tax:</label>
+
+                                    <input type="text" class="form-control" id="total_amount" name="total_amount"
+                                        placeholder="" value="<%=bookingListById.approved_amount%>"
+                                    readonly="readonly">
+                                </div>
+
+                            </div>
+                            <div class="box-footer">
+                                <%if( role_name == 'admin' || approveDisable){%>
+
+                                <input type="submit" name="approve" id="approve" value="Approve" class="btn btn-success"
+                                    disabled>
+                                <%}else{%>
+
+                                <input type="submit" name="approve" id="approve" value="Approve"
+                                    class="btn btn-success">
+                                <%}%>
+                            </div>
+                        </form>
+
+
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+    required
+    <%- include ('../views/template/scripts') %>
+
+                                <footer>
+                                    <div style="text-align: center;">
+                                        <p>Developed by <a href="https://octointernet.com">Nishadh Amonkar</a> and Tanay
+                                            Amonkar<br>
+                                            <a href="mailto:marutimandirdavorlim@gmail.com">Email Us</a></p>
+                                    </div>
+
+                                </footer>
+
+</body>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.5.3/js/bootstrapValidator.js"></script>
+<script>
+    $(document).ready(function () {
+        $(document).on('change', "#discount", function () {
+
+            var discount = parseInt($('#discount').val());
+            var total = (parseFloat($('#original_amount').val()) / 1.18) - discount;
+            var totalAfterGst = 1.18 * total;
+            if (discount > 0) {
+                $('#discount_rec').prop("disabled", false)
+            }
+            else
+                $('#discount_rec').prop("disabled", true)
+
+            $('#total_amount').val(totalAfterGst.toFixed(2))
+            if ($('#total_amount').val() <= 0) {
+                alert("Total amount cannot be less than 0")
+                $('#approve').prop("disabled", true)
+                return false;
+            }
+            else {
+                $('#approve').prop("disabled", false)
+
+
+            }
+        })
+        var discountDis = <%= discountDisable%>
+        var approveDis = <%= approveDisable %>
+        if (!approveDis && discountDis) {
+            $('#approvalform').data('bootstrapValidator').enableFieldValidators('discount', false);
+        }
+
+
+        $('#approvalform').bootstrapValidator({
+            // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                discount: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Dicsount field cannot be empty. Enter 0 if no discount applicable'
+                        }
+                    }
+                }
+            },
+        }).on('success.form.bv', function (e) {
+            if ($('#discount').val() > 0) {
+                if ($('#discount_rec option:selected').val() == "--Please Select--") {
+                    alert("Please enter a value for Discount Recommended By Field.");
+                    $("#approve").attr("disabled", false);
+                    return false;
+                }
+                else {
+                    $('#approvalform').bootstrapValidator('defaultSubmit');
+                }
+            }
+            else {
+                $('#approvalform').bootstrapValidator('defaultSubmit');
+            }
+        })
+
+    })
+</script>
+
+</html>

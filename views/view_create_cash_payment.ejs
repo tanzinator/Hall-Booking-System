@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+
+<html>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
+
+
+<%- include ('../views/template/stylesheetLinks') %>
+<style>
+    .datepicker table tr td.disabled,
+    .datepicker table tr td.disabled:hover {
+        color: #b90000;
+    }
+</style>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+
+        <%- include ('../views/template/view_header') %>
+
+        <%- include ('../views/template/nav') %>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    Record Cash Payment
+                    <!--<small>Update the inventory.</small>-->
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                    <li class="active">Record Cash Payment </li>
+                </ol>
+            </section>
+            <% if (typeof(message) != "undefined" && message.length > 0) { %>
+            <div class="alert alert-danger"><%= message %></div>
+            <% } %>
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="box box-primary">
+                    <div>
+                        <form method="POST" action="/admin/insert_cash_payment" class="" id="approvalform">
+
+                            <div class="box-body">
+                                <div class="form-group" style="width: 25%">
+                                    <label>Booking Id :</label>
+                                    <input type="text" class="form-control" id="booking_id" name="booking_id"
+                                        placeholder="" readonly="readonly" value='<%= bookingListById.booking_id%>'>
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Customer Name :</label>
+                                    <input type="text" class="form-control" id="customer_name" name="customer_name"
+                                        placeholder="" readonly="readonly"
+                                        value='<%= bookingListById.first_name + " " + bookingListById.last_name%>'>
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Original Approved Amount :</label>
+                                    <input type="text" class="form-control" id="approved_amount" name="approved_amount"
+                                        value="<%=bookingListById.approved_amount%>" placeholder="" readonly="readonly">
+                                </div>
+
+
+                                <div class="form-group" style="width: 25%">
+                                    <label>Received Amount :</label>
+                                    <input type="number" class="form-control" id="amount" name="amount" placeholder=""
+                                        required>
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Received By :</label>
+                                    <input type="text" class="form-control" id="received_by" name="received_by"
+                                        placeholder="" required>
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Received From :</label>
+                                    <input type="text" class="form-control" id="received_from" name="received_from"
+                                        placeholder="" required>
+                                </div>
+
+                                <div class="form-group" style="width: 25%">
+                                    <label>Reference No. If Any (UTR/Transaction No etc) :</label>
+                                    <input type="text" class="form-control" id="reference_no" name="reference_no"
+                                        placeholder="">
+                                </div>
+
+
+
+                                <div class="form-group" style="width: 25%">
+
+                                    <label>Payment Date</label>
+                                    <div class="input-group date" id="datetimepicker" data-date-format="dd.mm.yyyy"
+                                        data-link-field="dtp_input1">
+                                        <span class="input-group-addon"><span
+                                                class="glyphicon glyphicon-th"></span></span>
+                                        <input type="text" name="payment_date" id="payment_date"
+                                            class="datepicker form-control" placeholder="dd.mm.yyyy" required>
+                                    </div>
+                                </div>
+
+                                <div class="box-footer">
+
+
+                                    <input type="submit" name="submit_cash" id="submit_cash" value="Submit"
+                                        class="btn btn-success">
+                                </div>
+
+                            </div>
+                        </form>
+
+
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+    required
+    <%- include ('../views/template/scripts') %>
+
+
+    <footer>
+        <div style="text-align: center;">
+            <p>Developed by <a href="https://octointernet.com">Nishadh Amonkar</a> and Tanay Amonkar<br>
+                <a href="mailto:marutimandirdavorlim@gmail.com">Email Us</a></p>
+        </div>
+
+    </footer>
+</body>
+
+
+<script>
+    var start = new Date()
+    $(document).ready(function () {
+        $(' #datetimepicker').datepicker({ format: 'dd/mm/yyyy', endDate: start })
+        $(document).on('change', "#amount", function () {
+            var approved_amount = parseInt($('#approved_amount').val());
+            var received_amount = parseInt($('#amount').val());
+            if (received_amount < approved_amount) {
+                alert("Received amount cannot be greater than approved amount.")
+                $('#submit_cash').prop("disabled", true)
+                return false
+            }
+            else if (received_amount >= approved_amount) {
+                $('#submit_cash').prop("disabled", false)
+            }
+        })
+
+
+    })
+</script>
+
+</html>

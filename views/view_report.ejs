@@ -1,0 +1,112 @@
+<html>
+
+<head>
+ 
+
+  
+
+    <!-- <script type="text/javascript" charset="utf8" src="/jsdt/jquerymin182.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables_themeroller.css">
+    <script type="text/javascript" charset="utf8" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/jquery.dataTables.min.js"></script>
+    
+  <script>
+    $(document).ready(function () {
+      $('#receiptTable').DataTable();
+    });
+  </script>
+</head>
+<title>Detailed Report for <%=fromDate%> to <%=toDate%></title>
+
+<%if(data.length===0){%>
+<p>
+    Detailed Report for <%=fromDate%> to <%=toDate%>
+</p>
+<h2>No Data Recorded For That Date Range <a href="/admin/reports/">Go Back</a></h2>
+<%} else { %>
+<p>
+    Detailed Report for <%=fromDate%> to <%=toDate%>
+</p>
+<table id="receiptTable" name="receiptTable">
+  <thead>
+    <tr>
+    
+      <th>
+        Booking ID
+      </th>
+      <th>
+        Invoice ID
+
+      </th>
+      <th>
+        Status
+      </th>
+      <th>
+        Issued At
+      </th>
+      <th>
+        Paid At
+      </th>
+      <th>
+        Sale Value
+      </th>
+      <th>
+        Tax Collected
+      </th>
+      
+      
+
+      
+
+
+    </tr>
+  </thead>
+  <tbody>
+
+
+    <%data.forEach(curr=>{%>
+    <tr>
+      <td>
+        <%=curr.bookingid%>
+      </td>
+      <td>
+        <%=curr.paymentid%>
+      </td>
+      <td>
+        <%=curr.status%>
+      </td>
+      <td>
+        <%=new Date(parseInt(curr.issuedat)).getDate()+'/'+parseInt(new Date(parseInt(curr.issuedat)).getMonth()+1)+'/'+new Date(parseInt(curr.issuedat)).getFullYear()%>
+      </td>
+      <td>
+        <%=new Date(parseInt(curr.paidat)).getDate()+'/'+parseInt(new Date(parseInt(curr.paidat)).getMonth()+1)+'/'+new Date(parseInt(curr.paidat)).getFullYear()%>
+      </td>
+      <td>
+        <%=curr.amountpaid%>
+      </td>
+      <td>
+        <%=curr.tax%>
+      </td>
+     
+
+
+    </tr>
+
+
+
+    <%});}%>
+  </tbody>
+</table>
+
+
+<h2><a href="/admin/reports/">Reports Home</a></h2>
+
+<footer>
+    <div style="text-align: center;">
+            <p>Developed by <a href="https://octointernet.com">Nishadh Amonkar</a> and Tanay Amonkar<br>
+                <a href="mailto:marutimandirdavorlim@gmail.com">Email Us</a></p>
+    </div>
+   
+  </footer>
+</html>

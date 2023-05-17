@@ -1,0 +1,73 @@
+<!-- views/signup.ejs -->
+<!doctype html>
+<html>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<HTTP-EQUIV="PRAGMA" CONTENT="NO-STORE" />
+
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Maruti Mandir</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="../adminUi/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../adminUi/dist/css/AdminLTE.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="../adminUi/plugins/iCheck/square/blue.css">
+    <link rel="manifest" href="manifest.json">
+
+
+</head>
+
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <b>Maruti Mandir</b>
+        </div>
+        <!-- /.login-logo -->
+        <div class="login-box-body">
+            <p class="login-box-msg">Login</p>
+
+
+
+            <!-- LOGIN FORM -->
+            <form action="/admin/login" method="post">
+                <div class="form-group has-feedback">
+                    <input type="username" class="form-control" name="username" placeholder="Email">
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="password" class="form-control" name="password" placeholder="Password">
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block btn-flat">Login</button>
+            </form>
+            <hr>
+            <!-- <p>Register new member <a href="/users/signup">Signup</a></p> -->
+            <% if (message.length > 0) { %>
+            <div class="alert alert-danger"><%= message %></div>
+            <%}%>
+        </div>
+
+    </div>
+    <footer>
+        <div style="text-align: center;">
+                <p>Developed by <a href="https://octointernet.com">Nishadh Amonkar</a> and Tanay Amonkar<br>
+                    <a href="mailto:marutimandirdavorlim@gmail.com">Email Us</a></p>
+        </div>
+       
+      </footer>
+</body>
+
+
+</html>

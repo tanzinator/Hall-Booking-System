@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+
+<html>
+
+
+<%- include ('../views/template/stylesheetLinks') %>
+<style>
+    #A1,
+    #AD1,
+    #A2,
+    #AD2 {
+        background-color: rgba(0, 0, 255, 0.836)
+    }
+
+    #Paid {
+        background-color: rgb(43, 226, 83);
+    }
+
+    #Cancelled {
+        background-color: rgb(255, 51, 0)
+    }
+
+    #Adhoc {
+        background-color: orange
+    }
+
+    #Awaiting {
+        background-color: yellow
+    }
+</style>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+        <%- include ('../views/template/view_header') %>
+
+        <%- include ('../views/template/nav') %>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    Hall Bookings
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i>Hall Bookings</a></li>
+                </ol>
+            </section>
+            <% if (typeof(message) != "undefined" && message.length > 0) { %>
+            <div class="alert alert-success"><%= message %></div>
+            <% } %>
+
+            <% if (typeof(olderDateMessage) != "undefined" && olderDateMessage.length > 0) { %>
+            <div class="alert alert-danger"><%= olderDateMessage %></div>
+            <% } %>
+
+            <% if (typeof(blockBooking) != "undefined" && blockBooking.length > 0) { %>
+            <div class="alert alert-success"><%= blockBooking %></div>
+            <% } %>
+            <% if (typeof(cashPayment) != "undefined" && cashPayment.length > 0) { %>
+            <div class="alert alert-success"><%= cashPayment %></div>
+            <% } %>
+            <% if (typeof(adhocRequest) != "undefined" && adhocRequest.length > 0) { %>
+            <div class="alert alert-success"><%= adhocRequest %></div>
+            <% } %>
+
+
+
+            <p></p>
+            <p></p>
+            <p></p>
+
+
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="box box-primary">
+                    <div>
+                        <% if(typeof(bookingList) != "undefined") {%>
+
+                        <table class="table table-bordered" id="request">
+                            <thead>
+                                <tr>
+                                    <th>Booking ID</th>
+                                    <th>Hall</th>
+                                    <th>Original Amount</th>
+                                    <th>Approved Amount</th>
+                                    <th>Approval status</th>
+                                    <th>Approved By</th>
+                                    <th>Booking Date</th>
+                                    <th>Action</th>
+                                    <th>Payment Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% 
+                                var sl=1;
+                                bookingList.forEach(function(element) {%>
+                                <tr>
+
+                                    <td><a href="/admin/booking_id/<%=element.booking_id%>">
+                                            <i class="fa fa-tags" aria-hidden="true"></i>
+                                            <%=element.booking_id%></a></td>
+                                    <td><%= element.venue_name%></td>
+                                    <td><%= element.original_amount%></td>
+                                    <td><%= element.approved_amount%></td>
+                                    <% if(element.booking_status == "A1") { %>
+                                    <td id="A1"><%=element.booking_status%></td>
+                                    <%}%>
+                                    <% if(element.booking_status == "AD1") { %>
+                                    <td id="AD1"><%=element.booking_status%></td>
+                                    <%}%>
+                                    <% if(element.booking_status == "A2") { %>
+                                    <td id="A2"><%=element.booking_status%></td>
+                                    <%}%>
+                                    <% if(element.booking_status == "AD2") { %>
+                                    <td id="AD2"><%=element.booking_status%></td>
+                                    <%}%>
+                                    <% if(element.booking_status == "Paid") { %>
+                                    <td id="Paid"><%=element.booking_status%></td>
+                                    <%}%>
+                                    <% if(element.booking_status == "Cancelled") { %>
+                                    <td id="Cancelled"><%=element.booking_status%></td>
+                                    <%}%>
+                                    <% if(element.booking_status == "Awaiting Approval") { %>
+                                    <td id="Awaiting"><%=element.booking_status%></td>
+                                    <%}%>
+                                    <% if(element.booking_status == "Ad hoc") { %>
+                                    <td id="Adhoc"><%=element.booking_status%></td>
+                                    <%}%>
+                                    
+                                    
+                                    <td><%= element.approved_by%></td>
+                                    <td><%= new Date(element.booking_date).toLocaleDateString()%></td>
+                                    <td>
+                                        <form action="/admin/cancel_booking/<%=element.booking_id%>" method="GET">
+                                            <input type="hidden" value="<%=element.booking_id%>"><button
+                                                class="btn btn-warning" type="submit">Cancel</button>
+                                            </element>
+                                        </form>
+                                    </td>
+                                    <%if(element.booking_status == 'A2' || element.booking_status == 'AD2'){%>
+                                    <td>
+                                        <form action="/admin/record-cash-payment/<%=element.booking_id%>" method="GET">
+                                            <input type="hidden" value="<%=element.booking_id%>"><button
+                                                class="btn btn-primary" type="submit">Cash Payment</button>
+                                            </element>
+                                        </form>
+                                    </td>
+                                    <%}else {%>
+                                    <td>
+                                        <form method="GET">
+                                            <input type="hidden" value=""><button class="btn btn-primary" type="submit"
+                                                disabled>Online Payment</button>
+                                            </element>
+                                        </form>
+                                    </td>
+                                    <%}%>
+                                </tr>
+                                <%})%> </tbody>
+                        </table>
+                        <%}%>
+                    </div>
+                </div>
+            </section>
+            <!-- /.content -->
+        </div>
+
+    </div>
+    <!-- ./wrapper -->
+    <%- include ('../views/template/scripts') %>
+                        <script type="text/javascript" src="/public/js-xlsx/xlsx.core.min.js"></script>
+                        <script type="text/javascript" src="/public/tableExport.min.js"></script>
+                        <script src="/public/tableExport.js"></script>
+
+                        <footer>
+                            <div style="text-align: center;">
+                                <p>Developed by <a href="https://octointernet.com">Nishadh Amonkar</a> and Tanay
+                                    Amonkar<br>
+                                    <a href="mailto:marutimandirdavorlim@gmail.com">Email Us</a></p>
+                            </div>
+
+                        </footer>
+
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //data table
+        $('#request').DataTable()
+
+        //fade out success message
+        setTimeout(fade_out, 1500);
+        function fade_out() {
+            $(".alert-success").fadeOut().empty();
+            $(".alert-danger").fadeOut().empty();
+        }
+
+    })
+
+    function myFunction1() {
+        // Declare variables
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("request");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[3];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+
+
+</html>

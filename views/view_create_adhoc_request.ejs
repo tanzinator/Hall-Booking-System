@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+
+<html>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
+
+
+<%- include ('../views/template/stylesheetLinks') %>
+<style>
+    .datepicker table tr td.disabled,
+    .datepicker table tr td.disabled:hover {
+        color: #b90000;
+    }
+</style>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+
+        <%- include ('../views/template/view_header') %>
+
+        <%- include ('../views/template/nav') %>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    Adhoc Booking
+                    <!--<small>Update the inventory.</small>-->
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                    <li class="active">Adhoc Booking </li>
+                </ol>
+            </section>
+            <% if (typeof(message) != "undefined" && message.length > 0) { %>
+            <div class="alert alert-danger"><%= message %></div>
+            <% } %>
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="box box-primary">
+                    <div>
+                        <form method="POST" action="/admin/insert_adhoc_request" class="" id="approvalform">
+
+                            <div class="box-body">
+
+                                <div class="form-group" style="width: 25%">
+                                    <label>First Name :</label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name"
+                                        placeholder="">
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Last Name :</label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name"
+                                        placeholder="">
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Mobile Number :</label>
+                                    <input type="text" class="form-control" id="mobile_number" name="mobile_number"
+                                        placeholder="">
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Email id :</label>
+                                    <input type="text" class="form-control" id="email" name="email" placeholder="">
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Billing Address :</label>
+                                    <input type="text" class="form-control" id="billing_address" name="billing_address"
+                                        placeholder="">
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    <label>Occasion Type :</label>
+                                    <input type="text" class="form-control" id="occasion_type" name="occasion_type"
+                                        placeholder="">
+                                </div>
+
+
+                                <div class="form-group has-feedback">
+                                    <label>Hall Name:</label>
+                                    <select class="form-control select2 bb" name="venue_name" id="venue_name"
+                                        style="width: 25%">
+                                        <option>--Please Select--</option>
+                                        <%if(venues){%>
+                                        <%venues.forEach(function(element){%>
+                                        <option value="<%=element.venue_name%>"><%=element.venue_name%></option>
+                                        <%})%>
+                                        <%}%>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="width: 25%">
+                                    
+                                    <label>Date of booking</label>
+                                        <div class="input-group date" id="datetimepicker" data-date-format="dd.mm.yyyy"
+                                            data-link-field="dtp_input1">
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                            <input type="text" name="from_date" id="from_date" class="datepicker form-control"
+                                                placeholder="dd.mm.yyyy">
+                                        </div>
+                                </div>
+
+                            <div class="box-footer">
+                              
+
+                                <input type="submit" name="submit_adhoc" id="submit_adhoc" value="Submit"
+                                    class="btn btn-success">
+                            </div>
+                            
+                        </div>
+                        </form>
+
+
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+    required
+    <%- include ('../views/template/scripts') %>
+
+                                        <footer>
+                                            <div style="text-align: center;">
+                                                <p>Developed by <a href="https://octointernet.com">Nishadh Amonkar</a>
+                                                    and Tanay Amonkar<br>
+                                                    <a href="mailto:marutimandirdavorlim@gmail.com">Email Us</a></p>
+                                            </div>
+
+                                        </footer>
+
+</body>
+
+
+<script>
+    jQuery(function ($) {
+
+
+
+        var dateObj = {}
+
+
+
+        $(document).on('change', ".bb", function () {
+            if (this.value == "--Please Select--") {
+                alert("please select a valid hall name.")
+                $('#submit_adhoc').prop('disabled', true)
+                return false;
+            }
+            else {
+                var disabledDateArray = []
+                $('#submit_adhoc').prop('disabled', false)
+                venue_name = this.value;
+                dateObj.venue_name = venue_name;
+                $.ajax({
+
+                    type: 'POST',
+                    dataType: 'json',
+                    url: '/getBlockedDates',
+                    contentType: 'application/json',
+                    data: JSON.stringify(dateObj),
+                    success: function (response) {
+                        var dateResponse = response.datesArray
+                        for (var i = 0; i < dateResponse.length; i++) {
+                            disabledDateArray.push(dateResponse[i])
+                        }
+
+                        paidDatesAjax(dateObj)
+                    },
+                    error: function (jqXHR, exception) {
+                        if (jqXHR.status === 0) {
+                            alert('Not connect.\n Verify Network.');
+                        } else if (jqXHR.status == 404) {
+                            alert('Requested page not found. [404]');
+                        } else if (jqXHR.status == 500) {
+                            alert('Internal Server Error [500].');
+                        } else if (exception === 'parsererror') {
+                            alert('Requested JSON parse failed.');
+                        } else if (exception === 'timeout') {
+                            alert('Time out error.');
+                        } else if (exception === 'abort') {
+                            alert('Ajax request aborted.');
+                        } else {
+                            alert('Uncaught Error.\n' + jqXHR.responseText);
+                        }
+                    }
+                });
+            }
+
+            //get paid dates
+            function paidDatesAjax(dateObj) {
+                dateObj.dateArray = disabledDateArray
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: '/validateDate',
+                    contentType: 'application/json',
+                    data: JSON.stringify(dateObj),
+                    success: function (response) {
+                        var dateResponse1 = response.blockedDatesArray
+                        for (var i = 0; i < dateResponse1.length; i++) {
+                            disabledDateArray.push(dateResponse1[i])
+                        }
+                        $('#datetimepicker').datepicker('setDatesDisabled', disabledDateArray)
+
+
+                    },
+                    error: function (jqXHR, exception) {
+                        if (jqXHR.status === 0) {
+                            alert('Not connect.\n Verify Network.');
+                        } else if (jqXHR.status == 404) {
+                            alert('Requested page not found. [404]');
+                        } else if (jqXHR.status == 500) {
+                            alert('Internal Server Error [500].');
+                        } else if (exception === 'parsererror') {
+                            alert('Requested JSON parse failed.');
+                        } else if (exception === 'timeout') {
+                            alert('Time out error.');
+                        } else if (exception === 'abort') {
+                            alert('Ajax request aborted.');
+                        } else {
+                            alert('Uncaught Error.\n' + jqXHR.responseText);
+                        }
+                    },
+                });
+            }
+
+        })
+
+
+        $('#datetimepicker').datepicker({
+
+            format: 'dd/mm/yyyy',
+            startDate: new Date(),
+            endDate: new Date(new Date().setDate(new Date().getDate() + 60)),
+        }).on('changeDate show', function (selected) {
+            $('#approvalform').bootstrapValidator('revalidateField', 'booking_date');
+
+
+        });
+    })
+</script>
+
+</html>
